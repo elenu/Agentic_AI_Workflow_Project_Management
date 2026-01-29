@@ -1,0 +1,37 @@
+source /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/activate
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+/Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course(base) MacBook-Pro-de-Elena-2:phase_1 /Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/activate
+/Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/python /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/routing_agent.py
+(.venv) (base) MacBook-Pro-de-Elena-2:phase_1 elenaeyre$ /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/python /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/routing_agent.py
+Prompt: Tell me about the history of Rome, Texas
+0.38570717319174086
+0.16502765367260475
+0.0026120476771252198
+[Router] Best agent: texas agent (score=0.386)
+Response: Rome, Texas is a small unincorporated community located in Fannin County. It was established in the mid-19th century and was named after the city of Rome in Italy. The community was originally settled by pioneers and farmers attracted to the fertile land in the area. Rome, Texas has a rich agricultural history, with cotton being a major crop in the region.
+
+Over the years, Rome has remained a small, close-knit community with a focus on agriculture. While it may not have the same historical significance as its namesake in Italy, Rome, Texas holds its own place in the history of Fannin County and continues to be a quiet, rural community to this day.
+Prompt: Tell me about the history of Rome, Italy
+0.14362240817264763
+0.2880543051768198
+0.03203079128605612
+[Router] Best agent: europe agent (score=0.288)
+Response: Rome, Italy, has a rich and extensive history that dates back over 2,800 years. It was founded in 753 BC according to legend by Romulus and Remus, twin brothers who were raised by a she-wolf. Rome started as a small settlement on the banks of the Tiber River and grew to become the capital of the Roman Kingdom, Roman Republic, and Roman Empire.
+
+The Roman Kingdom was established in 753 BC and lasted until 509 BC when it was overthrown and replaced by the Roman Republic. The Roman Republic was a period of great expansion and conquest, with Rome establishing control over much of the Mediterranean region. However, internal strife and power struggles led to the collapse of the Republic and the rise of the Roman Empire.
+
+The Roman Empire was founded in 27 BC by Augustus Caesar, the first Roman Emperor. The empire reached its peak during the 2nd century AD, when it controlled vast territories in Europe, Africa, and Asia. Rome was a center of culture, art, and architecture during this time, with iconic structures such as the Colosseum, Pantheon, and Roman Forum being built.
+
+The decline of the Roman Empire began in the 3rd century AD due to economic troubles, military defeats, and political instability. The empire was eventually split into two halves, with the Western Roman Empire falling in 476 AD to Germanic tribes. The Eastern Roman Empire, also known as the Byzantine Empire, continued to exist until 1453 when Constantinople fell to the Ottoman Turks.
+
+Rome has since been a center of art, culture, and religion in Europe. It is known for its historic landmarks, such as the Vatican City, St. Peter's Basilica, and the Sistine Chapel. Today, Rome is the capital of Italy and a popular tourist destination, attracting millions of visitors each year to explore its ancient ruins and vibrant culture.
+Prompt: One story takes 2 days, and there are 20 stories
+0.05941409246899618
+0.08292212189656915
+0.13014618805576572
+[Router] Best agent: math agent (score=0.130)
+Response: It will take 40 days to complete all 20 stories.
+(.venv) (base) MacBook-Pro-de-Elena-2:phase_1 elenaeyre$ 

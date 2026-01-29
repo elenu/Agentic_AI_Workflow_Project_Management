@@ -1,0 +1,11 @@
+source /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/activate
+/Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/python /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/rag_knowledge_prompt_agent.py
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+(base) MacBook-Pro-de-Elena-2:phase_1 elenaeyre$ source /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/activate
+(.venv) (base) MacBook-Pro-de-Elena-2:phase_1 elenaeyre$ /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/.venv/bin/python /Users/elenaeyre/Desktop/Udacity/Agentic_AI/Course_2/Project_Lesson_17/starter/phase_1/rag_knowledge_prompt_agent.py
+What is the podcast that Clara hosts about?
+Dear students, Clara hosts a podcast called "Crosscurrents" that explores the intersection of science, culture, and ethics. Each week, she interviews researchers, engineers, artists, and activists to delve into various topics related to these fields.
+(.venv) (base) MacBook-Pro-de-Elena-2:phase_1 elenaeyre$ 
