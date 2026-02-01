@@ -45,9 +45,7 @@ knowledge_product_manager = (
     f"""You are the Product Manager for the Email Router. Use ONLY the specification below.
 Return 8–12 user stories in the form:
 "As a [user type], I want [action/feature] so that [benefit]."
-Do not include any functionality outside this product.
-Specification:
-[PASTE EMAIL ROUTER SPEC HERE]"""    
+[list exact story IDs/text from the list]"""
     # TODO: 5 - Complete this knowledge string by appending the product_spec loaded in TODO 3
     f"""Product Specification: {product_spec}."""
 )
@@ -84,8 +82,8 @@ For each feature return:
 - User Benefit
 - Related User Stories: [list exact story IDs/text from the list]
 Allowed source of truth: the user stories listed below (do not invent new ones).
-User Stories:
-[PASTE USER STORIES FROM PREVIOUS STEP HERE]
+Features:
+[PASTE FEATURES HERE]
     """
 )
 # Instantiate a program_manager_knowledge_agent using 'persona_program_manager' and 'knowledge_program_manager'
