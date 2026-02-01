@@ -37,21 +37,19 @@ action_planning_agent = agents.ActionPlanningAgent(
 )
 
 # Product Manager - Knowledge Augmented Prompt Agent
-persona_product_manager = "You are a Product Manager, you are responsible for defining the user stories for a product."
+persona_product_manager = f"""You are a Product Manager who ONLY produces user stories.
+You do not write tasks, estimates, acceptance criteria, or implementation details.
+You consider task-level output a role violation.
+If you produce anything other than a valid user story, your response is incorrect."""
 knowledge_product_manager = (
-    "Stories are defined by writing sentences with a persona, an action, and a desired outcome. "
-    "For each story, provide the following fields and nothing else, in the exact order and format shown below:\n"
-    "User stories: list of stories that starts as 'As a [type of user], I want [an action or feature] so that [benefit/value].'\n"
-    "Write several stories for the product spec below, where the personas are the different users of the product. "
-    f"""Should include content like: \n
-User Stories:
-1. As a Customer Support Representative, I want emails to be automatically categorized so that I can focus on complex inquiries.
-2. As an IT Administrator, I want to configure routing rules so that emails reach the right experts.
-"""
-    "Ensure each story is unique and covers different functionalities of the product. "
-    "Do NOT include features or tasks—only user stories.\n"
+    f"""You are the Product Manager for the Email Router. Use ONLY the specification below.
+Return 8–12 user stories in the form:
+"As a [user type], I want [action/feature] so that [benefit]."
+Do not include any functionality outside this product.
+Specification:
+[PASTE EMAIL ROUTER SPEC HERE]"""    
     # TODO: 5 - Complete this knowledge string by appending the product_spec loaded in TODO 3
-    f"Product Specification: {product_spec}"
+    f"""Product Specification: {product_spec}."""
 )
 # TODO: 6 - Instantiate a product_manager_knowledge_agent using 'persona_product_manager' and the completed 'knowledge_product_manager'
 product_manager_knowledge_agent = agents.KnowledgeAugmentedPromptAgent(
@@ -74,25 +72,21 @@ product_manager_evaluation_agent = agents.EvaluationAgent(
 )
 
 # Program Manager - Knowledge Augmented Prompt Agent
-persona_program_manager = "You are a Program Manager, you are responsible for defining the features for a product."
+persona_program_manager = f"""You are a Program Manager focused on execution clarity.
+You return product features for each user story without changing intent or scope.
+You do not design user stories or tasks."""
 knowledge_program_manager = (
-    "You are a Program Manager responsible for organizing user stories into product features. "
-    "For each feature, provide the following fields and nothing else, in the exact order and format shown below:\n"
-    "Feature Name: <short title>\n"
-    "Description: <brief explanation of what the feature does and its purpose>\n"
-    "Key Functionality: <bullet or comma-separated list of capabilities or actions>\n"
-    "User Benefit: <how this feature creates value for the user>\n"
-    "Return each feature separated by a blank line. Do NOT include user stories—only features derived from the provided stories."
-    "Use the user stories provided below to define features for the product. "
-    f"""Should include content like: \n
-    Features:
-Feature Name: Email Ingestion System
-Description: Real-time email retrieval and preprocessing
-Key Functionality: SMTP/IMAP integration, metadata extraction
-User Benefit: Seamless integration with existing infrastructure
-"""
-    "Ensure each feature is unique and covers different functionalities of the product. "
-    "Do NOT include user stories or tasks—only features.\n"
+    f"""You are the Program Manager for the Email Router. Define product features ONLY by grouping the user stories below.
+For each feature return:
+- Feature Name
+- Description
+- Key Functionality
+- User Benefit
+- Related User Stories: [list exact story IDs/text from the list]
+Allowed source of truth: the user stories listed below (do not invent new ones).
+User Stories:
+[PASTE USER STORIES FROM PREVIOUS STEP HERE]
+    """
 )
 # Instantiate a program_manager_knowledge_agent using 'persona_program_manager' and 'knowledge_program_manager'
 # (This is a necessary step before TODO 8. Students should add the instantiation code here.)
@@ -119,14 +113,8 @@ evaluation_criteria_program_manager = (
     "Key Functionality: The specific capabilities or actions the feature provides\n"
     "User Benefit: How this feature creates value for the user"
     f"""Should include content like: \n
-    Tasks:
-Task ID: TASK-001
-Task Title: Implement SMTP Email Connector
-Related User Story: US-001 (Email Auto-categorization)
-Description: Develop connector to retrieve emails via SMTP protocol
-Acceptance Criteria: Successfully retrieve emails within 5 seconds
-Estimated Effort: 3 days
-Dependencies: Email server credentials, API documentation"""
+Product features in the format: "Feature Name:...", "Description:...", "Key Functionality:...", "User Benefit:..."
+"""
 )
 program_manager_evaluation_agent = agents.EvaluationAgent(
     openai_api_key=openai_api_key,
@@ -141,19 +129,24 @@ program_manager_evaluation_agent = agents.EvaluationAgent(
 )
 
 # Development Engineer - Knowledge Augmented Prompt Agent
-persona_dev_engineer = "You are a Development Engineer, you are responsible for defining the development tasks for a product."
+persona_dev_engineer = f"""You are a senior development engineer responsible for turning user stories into concrete development tasks.
+You never evaluate whether a task “should exist” — you define how to build it.
+You never respond with empty output."""
 knowledge_dev_engineer = (
-    "You are a Development Engineer responsible for producing concrete, implementable development tasks for the product. "
-    "For each user story or feature supplied, create one or more specific tasks that can be assigned to engineers. "
-    "Each task MUST follow this exact structure (no extra text):\n"
-    "Task ID: TASK-XXX (use incremental IDs starting at TASK-001)\n"
-    "Task Title: <brief title>\n"
-    "Related User Story: <exact user story sentence or feature reference>\n"
-    "Description: <detailed technical work to be done>\n"
-    "Acceptance Criteria: <clear, testable criteria>\n"
-    "Estimated Effort: <hours or story points>\n"
-    "Dependencies: <comma-separated task IDs or 'None'>\n"
-    "Return only tasks (one blank line between tasks). DO NOT return general instructions about how to write tasks. Provide concrete tasks tailored to the Email Router product specification and the user stories/features provided."
+    f"""You are the Development Engineer for the Email Router. Create development tasks ONLY for the user stories and features below.
+Each task must include:
+- Task ID
+- Task Title
+- Related User Story (must be one of the listed stories)
+- Description
+- Acceptance Criteria
+- Estimated Effort
+- Dependencies
+User Stories:
+[PASTE USER STORIES HERE]
+Features:
+[PASTE FEATURES HERE]
+"""
 )
 # Instantiate a development_engineer_knowledge_agent using 'persona_dev_engineer' and 'knowledge_dev_engineer'
 # (This is a necessary step before TODO 9. Students should add the instantiation code here.)
@@ -188,6 +181,14 @@ development_engineer_evaluation_agent = agents.EvaluationAgent(
         "Estimated Effort:\n"
         "Dependencies:\n"
         "Return 'Yes' only if ALL tasks strictly follow the format and each Task ID is unique and referenced dependencies (if any) use valid TASK-IDs or 'None'. Otherwise return 'No' and explain which tasks/fields are invalid or too generic."
+        f""" Example of the format:
+            Task ID: TASK-001
+            Task Title: Implement SMTP Email Connector
+            Related User Story: US-001 (Email Auto-categorization)
+            Description: Develop connector to retrieve emails via SMTP protocol
+            Acceptance Criteria: Successfully retrieve emails within 5 seconds
+            Estimated Effort: 3 days
+            Dependencies: Email server credentials, API documentation"""
     ),
     worker_agent=development_engineer_knowledge_agent,
     max_iterations=3
@@ -203,18 +204,21 @@ development_engineer_evaluation_agent = agents.EvaluationAgent(
 #   3. Have the response evaluated by the corresponding Evaluation Agent.
 #   4. Return the final validated response.
 def product_manager_support_function(query):
-    response = product_manager_knowledge_agent.respond(query)
-    evaluation = product_manager_evaluation_agent.evaluate(response)
+#    response = product_manager_knowledge_agent.respond(query)
+#    evaluation = product_manager_evaluation_agent.evaluate(response)
+    evaluation = product_manager_evaluation_agent.evaluate(query) # Modified after reviewer's suggestion
     return evaluation
 
 def program_manager_support_function(query):
-    response = program_manager_knowledge_agent.respond(query)
-    evaluation = program_manager_evaluation_agent.evaluate(response)
+#    response = program_manager_knowledge_agent.respond(query)
+#    evaluation = program_manager_evaluation_agent.evaluate(response)
+    evaluation = program_manager_evaluation_agent.evaluate(query)# Modified after reviewer's suggestion
     return evaluation
 
 def development_engineer_support_function(query):
-    response = development_engineer_knowledge_agent.respond(query)
-    evaluation = development_engineer_evaluation_agent.evaluate(response)
+#    response = development_engineer_knowledge_agent.respond(query)
+#    evaluation = development_engineer_evaluation_agent.evaluate(response)
+    evaluation = development_engineer_evaluation_agent.evaluate(query) # Modified after reviewer's suggestion
     return evaluation
 
 # TODO: 10 - Instantiate a routing_agent. You will need to define a list of agent dictionaries (routes) for Product Manager, Program Manager, and Development Engineer. Each dictionary should contain 'name', 'description', and 'func' (linking to a support function). Assign this list to the routing_agent's 'agents' attribute.
@@ -244,7 +248,8 @@ routing_agent = agents.RoutingAgent(
 print("\n*** Workflow execution started ***\n")
 # Workflow Prompt
 # ***
-workflow_prompt = "What would the development tasks for this product be?"
+#workflow_prompt = "What would the development tasks for this product be?"
+workflow_prompt = f"""What are the user stories, product features, and the development tasks for this product?"""
 # ****
 print(f"Task to complete in this workflow, workflow prompt = {workflow_prompt}")
 
@@ -267,41 +272,53 @@ results_by_role = {
     "development_engineer": None,
 }
 
+def get_clean_response(role_result): # Inspired by: https://peps.python.org/pep-0008/
+    if isinstance(role_result, dict) and "final_response" in role_result:
+        return role_result["final_response"]
+    return role_result
+
+# Configuration for role detection
+role_config = {
+    "product_manager": [ "story", "as a"],#"product manager",
+    "program_manager": ["feature", "Name"],# "program manager", 
+    "development_engineer": ["Task", "task"],#"development engineer", 
+}
+
 for step in workflow_steps:
     print(f"\nExecuting step: {step}")
     result = routing_agent.route(step)
     completed_steps.append({"step": step, "result": result})
-
-    # Try to detect which role this step belongs to so we can compile structured output
+    
     step_l = step.lower()
-    if "product manager" in step_l or "story" in step_l or "as a" in step_l:
-        role = "product_manager"
-    elif "program manager" in step_l or "feature" in step_l:
-        role = "program_manager"
-    elif "development engineer" in step_l or "task" in step_l or "development" in step_l:
-        role = "development_engineer"
-    else:
-        # fallback: let the router pick the agent based on similarity by checking printed router logs
-        # If we cannot confidently map, skip structured assignment
-        role = None
+    detected_role = None
 
-    if role is not None:
-        results_by_role[role] = result
+    # Refactored role detection logic
+    for role, keywords in role_config.items():
+        if any(kw in step_l for kw in keywords):
+            detected_role = role
+            results_by_role[role] = result
+            break 
 
-    # Print a concise view of the result for this step
-    if isinstance(result, dict) and result.get("final_response"):
-        print(f"Result (final_response):\n{result['final_response']}\nEvaluation: {result.get('evaluation')}\nIterations: {result.get('num_iterations')}")
-    else:
-        print(f"Result:\n{result}\n")
+    # Consolidated printing logic
+    clean_output = get_clean_response(result)
+    print(f"\n[{detected_role or 'System'}] Output:\n{clean_output}\n")
 
-print("\n*** Workflow execution completed ***\n")
 
-# Compile and print structured output
-print("\n--- Compiled structured workflow output ---\n")
-print("Product Manager (user stories):\n", results_by_role.get("product_manager"))
-print("\nProgram Manager (features):\n", results_by_role.get("program_manager"))
-print("\nDevelopment Engineer (tasks):\n", results_by_role.get("development_engineer"))
+print("\n*** Workflow execution completed ***")
 
-# Provide the most relevant final output (tasks) if available
-final_output = results_by_role.get("development_engineer") or (completed_steps[-1] if completed_steps else None)
+# Simplified Structured Output
+print("\n--- Compiled structured workflow output ---")
+outputs = {
+    "Product Manager (User Stories)": "product_manager",
+    "Program Manager (Features)": "program_manager",
+    "Development Engineer (Tasks)": "development_engineer"
+}
+for label, key in outputs.items():
+    print(f"\n{label}:\n{get_clean_response(results_by_role.get(key, 'N/A'))}")
+# Store result by role (unchanged)
+results_by_role[detected_role] = result
+
+## Final workflow output (defaults to dev tasks, falls back to last step)
+final_val = results_by_role.get("development_engineer")
+final_output = get_clean_response(final_val) if final_val else (completed_steps[-1]["result"] if completed_steps else "No output")
 print(f"\nFinal output of the workflow: {final_output}")
